@@ -1,16 +1,19 @@
-;; ReputationScore - Rating system
+;; ReputationScore Clarity Contract
+;; On-chain reputation tracking system.
+
 
 (define-map scores principal uint)
-(define-map has-rated {rater: principal, rated: principal} bool)
+(define-constant admin tx-sender)
 
-(define-constant ERR-ALREADY-RATED (err u100))
-
-(define-public (rate-user (user principal) (points uint))
+(define-public (update-score (user principal) (score uint))
     (begin
-        (asserts! (is-none (map-get? has-rated {rater: tx-sender, rated: user})) ERR-ALREADY-RATED)
-        (map-set has-rated {rater: tx-sender, rated: user} true)
-        (let ((current-score (default-to u0 (map-get? scores user))))
-            (ok (map-set scores user (+ current-score points))))))
+        (asserts! (is-eq tx-sender admin) (err u401))
+        (map-set scores user score)
+        (ok true)
+    )
+)
 
 (define-read-only (get-score (user principal))
-    (ok (default-to u0 (map-get? scores user))))
+    (ok (default-to u0 (map-get? scores user)))
+)
+
