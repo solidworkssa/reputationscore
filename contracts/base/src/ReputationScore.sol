@@ -2,8 +2,11 @@
 pragma solidity ^0.8.20;
 
 /// @title ReputationScore Contract
+/// @author solidworkssa
 /// @notice On-chain reputation tracking system.
 contract ReputationScore {
+    string public constant VERSION = "1.0.0";
+
 
     mapping(address => uint256) public scores;
     address public admin;
