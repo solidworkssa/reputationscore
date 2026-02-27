@@ -17,11 +17,11 @@
 
 
 (define-map scores principal uint)
-(define-constant admin tx-sender)
+(define-constant admin contract-caller)
 
 (define-public (update-score (user principal) (score uint))
     (begin
-        (asserts! (is-eq tx-sender admin) (err u401))
+        (asserts! (is-eq contract-caller admin) (err u401))
         (map-set scores user score)
         (ok true)
     )
